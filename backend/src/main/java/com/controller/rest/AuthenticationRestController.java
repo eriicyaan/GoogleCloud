@@ -41,7 +41,6 @@ public class AuthenticationRestController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        System.out.println("ЗАПРОС ПОЛУЧИЛ");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
