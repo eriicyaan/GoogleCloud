@@ -85,6 +85,11 @@ public class DirectoryService {
 
         path.remove(path.size() - 1);
 
+        if(path.size() == 1) {
+            String str = path.get(0);
+
+            if(str.startsWith("user-") && str.endsWith("-files")) return true;
+        }
 
         Iterable<Result<Item>> results = minIOService.searchResources(bucket, String.join("/", path), true);
 

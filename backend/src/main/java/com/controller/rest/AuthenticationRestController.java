@@ -28,12 +28,15 @@ public class AuthenticationRestController {
 
     @PostMapping("sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse signUp(@RequestBody @Validated UserCreateEditDto user) {
+    public UserResponse signUp(@RequestBody @Validated UserCreateEditDto user,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
         UserReadDto createdUser = userService.create(user);
+        createSession(user, request, response);
+
         return new UserResponse(createdUser.getUsername());
     }
-
 
     @PostMapping("sign-in")
     @ResponseStatus(HttpStatus.OK)
@@ -41,21 +44,7 @@ public class AuthenticationRestController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        user.getPassword()
-                )
-        );
-
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        securityContextRepository.saveContext(
-                SecurityContextHolder.getContext(),
-                request,
-                response
-        );
+        createSession(user, request, response);
 
         return new UserResponse(user.getUsername());
     }
@@ -68,5 +57,30 @@ public class AuthenticationRestController {
         if (session != null) {
             session.invalidate();
         }
+    }
+
+    private void createSession(Object user, HttpServletRequest request, HttpServletResponse response) {
+
+        boolean flag = user instanceof UserSignInDto;
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        flag
+                                ? ((UserSignInDto) user).getUsername()
+                                : ((UserCreateEditDto) user).getUsername(),
+                        flag
+                                ? ((UserSignInDto) user).getPassword()
+                                : ((UserCreateEditDto) user).getPassword()
+                )
+        );
+
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        securityContextRepository.saveContext(
+                SecurityContextHolder.getContext(),
+                request,
+                response
+        );
     }
 }

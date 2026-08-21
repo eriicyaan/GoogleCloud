@@ -18,7 +18,7 @@ export async function sendUpload(files, updateDownloadTask, updateTask, uploadTa
 
     const formData = new FormData();
     files.forEach(({file, path}) => {
-        formData.append("object", file, path);
+        formData.append("file", file, path);
     })
     formData.append("path", currPath);
 

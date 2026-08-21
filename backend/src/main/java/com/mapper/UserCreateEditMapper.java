@@ -16,11 +16,8 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User>{
     @Override
     public User map(UserCreateEditDto object) {
         return User.builder()
-                .email(object.getEmail())
                 .username(object.getUsername())
                 .password(passwordEncoder.encode(object.getPassword()))
-                .email(object.getEmail())
-                .birthday(object.getBirthday())
                 .role(Role.USER)
                 .build();
     }

@@ -12,10 +12,6 @@ import java.time.LocalDate;
 
 @Data
 public class UserCreateEditDto {
-    @Email
-    @NotBlank
-    private String email;
-
     @NotBlank
     @Length(min = 4, max = 20)
     private String username;
@@ -23,8 +19,4 @@ public class UserCreateEditDto {
     @NotBlank
     @Length(min = 5, max = 20)
     private String password;
-
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthday;
 }
